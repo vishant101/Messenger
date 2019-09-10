@@ -1,9 +1,9 @@
 package com.example.messenger.injection
 
-import androidx.core.view.KeyEventDispatcher
 import com.example.messenger.network.NetworkModule
 import com.example.messenger.viewmodel.MessageListViewModel
-import com.example.messenger.viewmodel.MessageViewModel
+import com.example.messenger.viewmodel.ReceivedMessageViewModel
+import com.example.messenger.viewmodel.SentMessageViewModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -14,7 +14,9 @@ interface ViewModelInjector {
 
     fun inject(messageListViewModel: MessageListViewModel)
 
-    fun inject(messageViewModel: MessageViewModel)
+    fun inject(sentMessageViewModel: SentMessageViewModel)
+
+    fun inject(receivedMessageViewModel: ReceivedMessageViewModel)
 
     @Component.Builder
     interface Builder {

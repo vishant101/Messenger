@@ -1,4 +1,5 @@
 package com.example.messenger.viewmodel
+import android.provider.Telephony
 import androidx.lifecycle.ViewModel
 import com.example.messenger.injection.DaggerViewModelInjector
 import com.example.messenger.injection.ViewModelInjector
@@ -17,7 +18,8 @@ abstract class BaseViewModel:ViewModel(){
     private fun inject() {
         when (this) {
             is MessageListViewModel -> injector.inject(this)
-            is MessageViewModel -> injector.inject(this)
+            is SentMessageViewModel -> injector.inject(this)
+            is ReceivedMessageViewModel -> injector.inject(this)
         }
     }
 }

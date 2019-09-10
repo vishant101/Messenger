@@ -3,4 +3,9 @@
 
     <string name="retry">Retry</string>
     <string name="message_error">An error occurred while loading the messages</string>
+    <string name="placeholder_text">Enter your message here..</string>
+    <string name="chat_profile_image">Chat Profile Image</string>
+    <string name="chat_profile_placeholder_name">John Doe</string>
+    <string name="placeholder_message">hi man, how are you?</string>
+    <string name="placeholder_sent_message">hello, hello!</string>
 </resources>
