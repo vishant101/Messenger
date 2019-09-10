@@ -7,8 +7,10 @@ import java.sql.Timestamp
 @Entity
 data class Message (
     @PrimaryKey
+    val messageId: Int,
     val senderId: Int,
-    val name: String,
+    val senderName: String,
+    val sentMessage: Boolean,   // Flag to check if Users message
     var messageText: String,
-    var timestamp: Int
+    var timeStamp: Double          // Epoch Time
 )

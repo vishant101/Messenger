@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 
 interface MessageApi {
-    @GET("/messages")
+    @GET("vishant101/resources/posts")
     fun getMessages(): Observable<List<Message>>
 }

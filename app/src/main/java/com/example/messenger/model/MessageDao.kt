@@ -11,5 +11,5 @@ interface MessageDao {
     val all: List<Message>
 
     @Insert
-    fun insertAll(vararg users: Message)
+    fun insertAll(vararg messages: Message)
 }

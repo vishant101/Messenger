@@ -1,5 +1,6 @@
 package com.example.messenger.viewmodel
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.example.messenger.R
@@ -51,7 +52,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
             .doOnTerminate { onRetrieveMessageListFinish() }
             .subscribe(
                 { result -> onRetrieveMessageListSuccess(result) },
-                { onRetrieveMessageListError() }
+                { error -> onRetrieveMessageListError(error) }
             )
     }
 
@@ -65,10 +66,14 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     }
 
     private fun onRetrieveMessageListSuccess(messageList:List<Message>){
+        for (item in messageList){
+            Log.i(item.senderName, item.messageText)
+        }
         messageListAdapter.updateMessageList(messageList)
     }
 
-    private fun onRetrieveMessageListError(){
+    private fun onRetrieveMessageListError(error: Any?){
+        Log.e("ERROR", error.toString())
         errorMessage.value = R.string.message_error
     }
 }
