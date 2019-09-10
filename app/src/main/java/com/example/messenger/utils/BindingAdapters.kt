@@ -28,3 +28,8 @@ fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
         text.observe(parentActivity, Observer { value -> view.text = value?:""})
     }
 }
+
+@BindingAdapter("goneUnless")
+fun goneUnless(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+}

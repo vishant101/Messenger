@@ -38,8 +38,8 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val message = messageList[position]
 
         when (holder.itemViewType) {
-            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message)
-            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message)
+            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message, position)
+            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message, position)
         }
     }
 
@@ -63,21 +63,28 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    class SentMessageHolder(private val binding: ItemSentMessageBinding):RecyclerView.ViewHolder(binding.root){
+    private fun calculateHasTail(position: Int) : Boolean{
+        if (position == messageList.size - 1) return true // Most recent message in conversation
+        if (messageList[position].senderId != messageList[position+1].senderId) return true // Message before it is send by the other user
+        if ((messageList[position].timeStamp - messageList[position-1].timeStamp) > 20000) return true // Time difference is more then 20 seconds
+        return false
+    }
+
+    inner class SentMessageHolder(private val binding: ItemSentMessageBinding):RecyclerView.ViewHolder(binding.root){
         private val viewModel = SentMessageViewModel()
 
-        fun bind(message:Message){
-            viewModel.bind(message)
+        fun bind(message:Message, position: Int){
+            viewModel.bind(message, calculateHasTail(position))
             binding.viewModel = viewModel
         }
     }
 
 
-    class ReceivedMessageHolder(private val binding: ItemReceivedMessageBinding):RecyclerView.ViewHolder(binding.root){
+    inner class ReceivedMessageHolder(private val binding: ItemReceivedMessageBinding):RecyclerView.ViewHolder(binding.root){
         private val viewModel = ReceivedMessageViewModel()
 
-        fun bind(message:Message){
-            viewModel.bind(message)
+        fun bind(message:Message, position: Int){
+            viewModel.bind(message, calculateHasTail(position))
             binding.viewModel = viewModel
         }
     }

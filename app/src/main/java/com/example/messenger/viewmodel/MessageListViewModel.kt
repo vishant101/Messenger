@@ -67,10 +67,13 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
 
     private fun onRetrieveMessageListSuccess(messageList:List<Message>){
         for (item in messageList){
+
             Log.i(item.senderName, item.messageText)
         }
         messageListAdapter.updateMessageList(messageList)
     }
+
+
 
     private fun onRetrieveMessageListError(error: Any?){
         Log.e("ERROR", error.toString())
