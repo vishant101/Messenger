@@ -2,6 +2,7 @@ package com.example.messenger.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.example.messenger.model.MessageSection
+import java.text.SimpleDateFormat
 import java.util.*
 
 class SectionBreakViewModel:BaseViewModel() {
@@ -9,7 +10,8 @@ class SectionBreakViewModel:BaseViewModel() {
 
     fun bind(messageSection: MessageSection){
         val date = Date(messageSection.epochTime)
-        dateString.value = date.toString()
+        val dateFormat = SimpleDateFormat("E HH:mm")
+        dateString.value = dateFormat.format(date) //date.toString()
     }
 
     fun getDate(): MutableLiveData<String> {

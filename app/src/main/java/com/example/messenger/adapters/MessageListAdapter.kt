@@ -39,7 +39,7 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 SectionBreakViewHolder(binding)
             }
             else -> {
-                val binding: ItemReceivedMessageBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_received_message, parent, false)
+                val binding: ItemSectionBreakBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_section_break, parent, false)
                 EmptyMessageHolder(binding)
             }
         }
@@ -96,5 +96,5 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    class EmptyMessageHolder(private val binding: ItemReceivedMessageBinding):RecyclerView.ViewHolder(binding.root)
+    class EmptyMessageHolder(private val binding: ItemSectionBreakBinding):RecyclerView.ViewHolder(binding.root)
 }
