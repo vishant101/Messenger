@@ -32,11 +32,12 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage:MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadMessages() }
+    var toastStatus = MutableLiveData<Boolean?>()
 
-    val enteredUserMessage = MutableLiveData<String>()
 
-
+    private val enteredUserMessage = MutableLiveData<String>()
     private val messageList: MutableList<Message> = mutableListOf()
+    private val messageSectionList: MutableList<MessageSection> = mutableListOf()
 
     private lateinit var subscription: Disposable
 
@@ -84,7 +85,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         for (item in messageList){
             this.messageList.add(item)
         }
-        val messageSectionList = getMessageSectionList()
+        createMessageSectionList()
         messageListAdapter.updateMessageList(messageSectionList)
     }
 
@@ -93,9 +94,12 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         errorMessage.value = R.string.message_error
     }
 
-    private fun getMessageSectionList(): MutableList<MessageSection> {
-        val messageSectionList: MutableList<MessageSection> = mutableListOf()
-        for (i in 0 until messageList.size){
+    private fun createMessageSectionList() {
+        updateMessageSelectionList(0)
+    }
+
+    private fun updateMessageSelectionList(start: Int){
+        for (i in start until messageList.size){
             val message = messageList[i]
             val viewType = getViewType(message)
             val hasTale = calculateHasTail(position = i, messageList = messageList)
@@ -115,8 +119,6 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
             // Add the messages
             messageSectionList.add(MessageSection(viewType, message, hasTale, epochTime))
         }
-
-        return messageSectionList
     }
 
     private fun getViewType(message: Message): Int{
@@ -135,8 +137,10 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     }
 
     fun sendMessage() {
-        if (enteredUserMessage.value == null) return
-        if (enteredUserMessage.value!! == "") return
+        if (enteredUserMessage.value == null || enteredUserMessage.value == ""){
+            this.toastStatus.value = true
+            return
+        }
         val timeStamp = System.currentTimeMillis() / 1000
         val messageId = this.messageList[messageList.size-1].messageId + 1
         val message = Message( messageId, USER_ID, USER_NAME, enteredUserMessage.value!!, timeStamp)
@@ -147,7 +151,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         // Ideally we want to send a message to a service and snyc our messageList
         // For now we will just update our local messages
         this.messageList.add(message)
-        val messageSectionList = getMessageSectionList()
+        updateMessageSelectionList(messageList.size-1)
         messageListAdapter.updateMessageList(messageSectionList)
         messageListAdapter.scrollTo.set(messageSectionList.size-1)
     }

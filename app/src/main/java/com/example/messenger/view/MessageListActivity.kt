@@ -1,6 +1,7 @@
 package com.example.messenger.view
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.messenger.R
 import com.example.messenger.databinding.ActivityMessageListBinding
 import com.example.messenger.injection.ViewModelFactory
+import com.example.messenger.utils.EMPTY_MESSAGE_TOAST
 import com.example.messenger.viewmodel.MessageListViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -27,6 +29,9 @@ class MessageListActivity: AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(MessageListViewModel::class.java)
         viewModel.errorMessage.observe(this, Observer {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
+        })
+        viewModel.toastStatus.observe(this, Observer {
+                toastStatus -> toastStatus?.let { Toast.makeText(this, EMPTY_MESSAGE_TOAST, Toast.LENGTH_SHORT).show() }
         })
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
