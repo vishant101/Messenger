@@ -55,13 +55,10 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return if(::messageSectionList.isInitialized) messageSectionList.size else 0
     }
 
-    // Determines the appropriate ViewType according to the sender of the message.
     override fun getItemViewType(position: Int): Int {
         val messageSection = messageSectionList[position]
-
         return messageSection.messageType
     }
-
 
     fun updateMessageList(messageSectionList:List<MessageSection>){
         this.messageSectionList = messageSectionList
@@ -85,7 +82,6 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.viewModel = viewModel
         }
     }
-
 
     inner class ReceivedMessageHolder(private val binding: ItemReceivedMessageBinding):RecyclerView.ViewHolder(binding.root){
         private val viewModel = ReceivedMessageViewModel()

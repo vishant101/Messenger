@@ -10,7 +10,6 @@ data class Message (
     val messageId: Int,
     val senderId: Int,
     val senderName: String,
-    val sentMessage: Boolean,   // Flag to check if Users message
     var messageText: String,
     var timeStamp: Long          // Epoch Time
 )

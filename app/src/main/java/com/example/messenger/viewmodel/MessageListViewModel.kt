@@ -14,11 +14,15 @@ import com.example.messenger.model.MessageSection.Types.VIEW_TYPE_SECTION_BREAK
 import com.example.messenger.network.MessageApi
 import com.example.messenger.utils.EPOCH_TWENTY_SECONDS
 import com.example.messenger.utils.EPOCh_TWO_HOURS
+import com.example.messenger.utils.USER_ID
+import com.example.messenger.utils.USER_NAME
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+
+
 
 class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     @Inject
@@ -28,6 +32,11 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage:MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadMessages() }
+
+    val enteredUserMessage = MutableLiveData<String>()
+
+
+    private val messageList: MutableList<Message> = mutableListOf()
 
     private lateinit var subscription: Disposable
 
@@ -71,14 +80,27 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         loadingVisibility.value = View.GONE
     }
 
-    private fun getMessageSectionList(messageList: List<Message>): MutableList<MessageSection> {
+    private fun onRetrieveMessageListSuccess(messageList:List<Message>){
+        for (item in messageList){
+            this.messageList.add(item)
+        }
+        val messageSectionList = getMessageSectionList()
+        messageListAdapter.updateMessageList(messageSectionList)
+    }
+
+    private fun onRetrieveMessageListError(error: Any?){
+        Log.e("ERROR", error.toString())
+        errorMessage.value = R.string.message_error
+    }
+
+    private fun getMessageSectionList(): MutableList<MessageSection> {
         val messageSectionList: MutableList<MessageSection> = mutableListOf()
         for (i in 0 until messageList.size){
             val message = messageList[i]
             val viewType = getViewType(message)
             val hasTale = calculateHasTail(position = i, messageList = messageList)
             val epochTime = message.timeStamp
-            
+
             if (i == 0) {
                 // If first item add a section break
                 messageSectionList.add(MessageSection(VIEW_TYPE_SECTION_BREAK, null, null, epochTime))
@@ -97,14 +119,9 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         return messageSectionList
     }
 
-    private fun onRetrieveMessageListSuccess(messageList:List<Message>){
-        val messageSectionList = getMessageSectionList(messageList)
-        messageListAdapter.updateMessageList(messageSectionList)
-    }
-
     private fun getViewType(message: Message): Int{
-        return when {
-            message.sentMessage -> VIEW_TYPE_MESSAGE_SENT
+        return when (USER_ID) {
+            message.senderId -> VIEW_TYPE_MESSAGE_SENT
             else -> VIEW_TYPE_MESSAGE_RECEIVED
         }
     }
@@ -117,10 +134,28 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         return false
     }
 
+    fun sendMessage() {
+        if (enteredUserMessage.value == null) return
+        if (enteredUserMessage.value!! == "") return
+        val timeStamp = System.currentTimeMillis() / 1000
+        val messageId = this.messageList[messageList.size-1].messageId + 1
+        val message = Message( messageId, USER_ID, USER_NAME, enteredUserMessage.value!!, timeStamp)
 
+        // Clear the text box
+        enteredUserMessage.value = ""
 
-    private fun onRetrieveMessageListError(error: Any?){
-        Log.e("ERROR", error.toString())
-        errorMessage.value = R.string.message_error
+        // Ideally we want to send a message to a service and snyc our messageList
+        // For now we will just update our local messages
+        this.messageList.add(message)
+        val messageSectionList = getMessageSectionList()
+        messageListAdapter.updateMessageList(messageSectionList)
+    }
+
+    fun getEnteredMessage(): MutableLiveData<String> {
+        return enteredUserMessage
+    }
+
+    fun onEditTextChange(s: CharSequence) {
+        enteredUserMessage.value = s.toString()
     }
 }

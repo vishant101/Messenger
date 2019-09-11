@@ -29,6 +29,7 @@ class MessageListActivity: AppCompatActivity() {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun showError(@StringRes errorMessage:Int){

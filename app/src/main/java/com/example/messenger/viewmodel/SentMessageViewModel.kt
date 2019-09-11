@@ -16,7 +16,7 @@ class SentMessageViewModel:BaseViewModel() {
       return messageText
    }
 
-   fun getHasTail():  MutableLiveData<Boolean> {
+   fun getHasTail(): MutableLiveData<Boolean> {
       return tail
    }
 }
