@@ -20,6 +20,7 @@ abstract class BaseViewModel:ViewModel(){
             is MessageListViewModel -> injector.inject(this)
             is SentMessageViewModel -> injector.inject(this)
             is ReceivedMessageViewModel -> injector.inject(this)
+            is SectionBreakViewModel -> injector.inject(this)
         }
     }
 }

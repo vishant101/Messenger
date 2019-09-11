@@ -3,6 +3,7 @@ package com.example.messenger.injection
 import com.example.messenger.network.NetworkModule
 import com.example.messenger.viewmodel.MessageListViewModel
 import com.example.messenger.viewmodel.ReceivedMessageViewModel
+import com.example.messenger.viewmodel.SectionBreakViewModel
 import com.example.messenger.viewmodel.SentMessageViewModel
 import dagger.Component
 import javax.inject.Singleton
@@ -17,6 +18,8 @@ interface ViewModelInjector {
     fun inject(sentMessageViewModel: SentMessageViewModel)
 
     fun inject(receivedMessageViewModel: ReceivedMessageViewModel)
+
+    fun inject(sectionBreakViewModel: SectionBreakViewModel)
 
     @Component.Builder
     interface Builder {

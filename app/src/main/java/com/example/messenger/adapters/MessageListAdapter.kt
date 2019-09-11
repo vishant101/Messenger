@@ -6,16 +6,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messenger.R
 import com.example.messenger.databinding.ItemReceivedMessageBinding
+import com.example.messenger.databinding.ItemSectionBreakBinding
 import com.example.messenger.databinding.ItemSentMessageBinding
-import com.example.messenger.model.Message
+import com.example.messenger.model.MessageSection
+import com.example.messenger.model.MessageSection.Types.VIEW_TYPE_MESSAGE_RECEIVED
+import com.example.messenger.model.MessageSection.Types.VIEW_TYPE_MESSAGE_SENT
+import com.example.messenger.model.MessageSection.Types.VIEW_TYPE_SECTION_BREAK
 import com.example.messenger.viewmodel.ReceivedMessageViewModel
+import com.example.messenger.viewmodel.SectionBreakViewModel
 import com.example.messenger.viewmodel.SentMessageViewModel
 
 
 class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val VIEW_TYPE_MESSAGE_SENT = 1
-    private val VIEW_TYPE_MESSAGE_RECEIVED = 2
-    private lateinit var messageList:List<Message>
+    private lateinit var messageSectionList: List<MessageSection>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -27,6 +30,10 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val binding: ItemReceivedMessageBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_received_message, parent, false)
                 ReceivedMessageHolder(binding)
             }
+            VIEW_TYPE_SECTION_BREAK -> {
+                val binding: ItemSectionBreakBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_section_break, parent, false)
+                SectionBreakViewHolder(binding)
+            }
             else -> {
                 val binding: ItemReceivedMessageBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_received_message, parent, false)
                 EmptyMessageHolder(binding)
@@ -35,46 +42,46 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message = messageList[position]
+        val messageSection = messageSectionList[position]
 
         when (holder.itemViewType) {
-            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(message, position)
-            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(message, position)
+            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(messageSection)
+            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(messageSection)
+            VIEW_TYPE_SECTION_BREAK -> (holder as SectionBreakViewHolder).bind(messageSection)
         }
     }
 
     override fun getItemCount(): Int {
-        return if(::messageList.isInitialized) messageList.size else 0
+        return if(::messageSectionList.isInitialized) messageSectionList.size else 0
     }
 
     // Determines the appropriate ViewType according to the sender of the message.
     override fun getItemViewType(position: Int): Int {
-        val message = messageList[position]
+        val messageSection = messageSectionList[position]
 
-        return when {
-            message.sentMessage -> VIEW_TYPE_MESSAGE_SENT
-            else -> VIEW_TYPE_MESSAGE_RECEIVED
-        }
+        return messageSection.messageType
     }
 
 
-    fun updateMessageList(messageList:List<Message>){
-        this.messageList = messageList
+    fun updateMessageList(messageSectionList:List<MessageSection>){
+        this.messageSectionList = messageSectionList
         notifyDataSetChanged()
     }
 
-    private fun calculateHasTail(position: Int) : Boolean{
-        if (position == messageList.size - 1) return true // Most recent message in conversation
-        if (messageList[position].senderId != messageList[position+1].senderId) return true // Message before it is send by the other user
-        if ((messageList[position].timeStamp - messageList[position-1].timeStamp) > 20000) return true // Time difference is more then 20 seconds
-        return false
+    inner class SectionBreakViewHolder(private val binding: ItemSectionBreakBinding):RecyclerView.ViewHolder(binding.root){
+        private val viewModel = SectionBreakViewModel()
+
+        fun bind(messageSection: MessageSection){
+            viewModel.bind(messageSection)
+            binding.viewModel = viewModel
+        }
     }
 
     inner class SentMessageHolder(private val binding: ItemSentMessageBinding):RecyclerView.ViewHolder(binding.root){
         private val viewModel = SentMessageViewModel()
 
-        fun bind(message:Message, position: Int){
-            viewModel.bind(message, calculateHasTail(position))
+        fun bind(messageSection: MessageSection){
+            viewModel.bind(messageSection.message!!, messageSection.hasTail!!)
             binding.viewModel = viewModel
         }
     }
@@ -83,8 +90,8 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ReceivedMessageHolder(private val binding: ItemReceivedMessageBinding):RecyclerView.ViewHolder(binding.root){
         private val viewModel = ReceivedMessageViewModel()
 
-        fun bind(message:Message, position: Int){
-            viewModel.bind(message, calculateHasTail(position))
+        fun bind(messageSection: MessageSection){
+            viewModel.bind(messageSection.message!!, messageSection.hasTail!!)
             binding.viewModel = viewModel
         }
     }
