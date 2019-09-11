@@ -12,5 +12,7 @@ A Rx Kotlin sample messenger app for Android. THe app is built with mvvm archite
 4. Run the messenger app on an emulator or device
 
 ## Screenshots
-<img src="https://github.com/vishant101/messenger/blob/master/screenshots/message.png" width="275" alt="Home" title="Home" />
+| Messages | Enter Text | Updated Messages |
+|------|---------|-----|
+| <img src="https://github.com/vishant101/messenger/blob/master/screenshots/messages.png" width="275" alt="Messages" title="Messages" /> | <img src="https://github.com/vishant101/messenger/blob/master/screenshots/entertext.png" width="275" alt="Enter Text" title="Enter Text" /> | <img src="https://github.com/vishant101/messenger/blob/master/screenshots/updatedmessages.png" width="275" alt="Updated Messages" title="Updated Messages" /> |
 
