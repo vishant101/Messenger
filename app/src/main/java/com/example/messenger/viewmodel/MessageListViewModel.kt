@@ -149,6 +149,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         this.messageList.add(message)
         val messageSectionList = getMessageSectionList()
         messageListAdapter.updateMessageList(messageSectionList)
+        messageListAdapter.scrollTo.set(messageSectionList.size-1)
     }
 
     fun getEnteredMessage(): MutableLiveData<String> {

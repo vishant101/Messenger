@@ -15,10 +15,14 @@ import com.example.messenger.model.MessageSection.Types.VIEW_TYPE_SECTION_BREAK
 import com.example.messenger.viewmodel.ReceivedMessageViewModel
 import com.example.messenger.viewmodel.SectionBreakViewModel
 import com.example.messenger.viewmodel.SentMessageViewModel
+import androidx.databinding.ObservableInt
+
+
 
 
 class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var messageSectionList: List<MessageSection>
+    var scrollTo = ObservableInt()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

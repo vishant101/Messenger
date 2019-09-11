@@ -33,3 +33,8 @@ fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
 fun goneUnless(view: View, visible: Boolean) {
     view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
 }
+
+@BindingAdapter("bind:scrollTo")
+fun scrollTo(recyclerView: RecyclerView, position: Int) {
+    recyclerView.scrollToPosition(position)
+}
