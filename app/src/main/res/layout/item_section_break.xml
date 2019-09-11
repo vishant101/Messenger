@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/section_day"
-            android:text="@string/placeholder_date"
+            android:hint="@string/placeholder_date"
             app:mutableText="@{viewModel.getDate()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
