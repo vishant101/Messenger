@@ -40,6 +40,7 @@
             app:mutableText="@{viewModel.getMessageText()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_message_tail"
+            android:textColor="@color/colorBlack"
             android:layout_marginStart="2dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

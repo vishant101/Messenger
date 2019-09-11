@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#E01E50</color>
     <color name="colorAccent">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorMGray">#EEEEEE</color>
     <color name="colorLGray">#E5E5EA</color>
     <color name="colorBorderGray">#BCBCBC</color>
+
 </resources>

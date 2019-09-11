@@ -102,7 +102,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_marginEnd="12dp"
                 android:onClick="@{() -> viewModel.sendMessage()}"
-                android:background="@drawable/round_send_black_24"/>
+                android:background="@drawable/round_send_white_24"/>
 
         </LinearLayout>
 
