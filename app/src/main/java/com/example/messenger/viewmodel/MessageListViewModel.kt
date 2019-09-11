@@ -37,7 +37,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
 
     private val enteredUserMessage = MutableLiveData<String>()
     private val messageList: MutableList<Message> = mutableListOf()
-    private val messageSectionList: MutableList<MessageSection> = mutableListOf()
+
 
     private lateinit var subscription: Disposable
 
@@ -85,7 +85,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         for (item in messageList){
             this.messageList.add(item)
         }
-        createMessageSectionList()
+        val messageSectionList: MutableList<MessageSection>  = createMessageSectionList()
         messageListAdapter.updateMessageList(messageSectionList)
     }
 
@@ -94,12 +94,9 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         errorMessage.value = R.string.message_error
     }
 
-    private fun createMessageSectionList() {
-        updateMessageSelectionList(0)
-    }
-
-    private fun updateMessageSelectionList(start: Int){
-        for (i in start until messageList.size){
+    private fun createMessageSectionList(): MutableList<MessageSection> {
+        val messageSectionList: MutableList<MessageSection> = mutableListOf()
+        for (i in 0 until messageList.size){
             val message = messageList[i]
             val viewType = getViewType(message)
             val hasTale = calculateHasTail(position = i, messageList = messageList)
@@ -119,6 +116,8 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
             // Add the messages
             messageSectionList.add(MessageSection(viewType, message, hasTale, epochTime))
         }
+
+        return messageSectionList
     }
 
     private fun getViewType(message: Message): Int{
@@ -151,7 +150,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         // Ideally we want to send a message to a service and snyc our messageList
         // For now we will just update our local messages
         this.messageList.add(message)
-        updateMessageSelectionList(messageList.size-1)
+        val messageSectionList: MutableList<MessageSection>  = createMessageSectionList()
         messageListAdapter.updateMessageList(messageSectionList)
         messageListAdapter.scrollTo.set(messageSectionList.size-1)
     }

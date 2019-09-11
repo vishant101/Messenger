@@ -9,9 +9,9 @@ class SectionBreakViewModel:BaseViewModel() {
     private val dateString = MutableLiveData<String>()
 
     fun bind(messageSection: MessageSection){
-        val date = Date(messageSection.epochTime)
+        val date = Date(messageSection.epochTime*1000)
         val dateFormat = SimpleDateFormat("E HH:mm")
-        dateString.value = dateFormat.format(date) //date.toString()
+        dateString.value = dateFormat.format(date) // date.toString()
     }
 
     fun getDate(): MutableLiveData<String> {

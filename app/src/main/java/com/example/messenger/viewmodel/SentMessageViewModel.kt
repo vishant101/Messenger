@@ -19,4 +19,8 @@ class SentMessageViewModel:BaseViewModel() {
    fun getHasTail(): MutableLiveData<Boolean> {
       return tail
    }
+
+   fun updateHasTail(hashTail: Boolean){
+      tail.value = hashTail
+   }
 }

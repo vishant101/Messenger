@@ -16,8 +16,8 @@ import com.example.messenger.viewmodel.ReceivedMessageViewModel
 import com.example.messenger.viewmodel.SectionBreakViewModel
 import com.example.messenger.viewmodel.SentMessageViewModel
 import androidx.databinding.ObservableInt
-
-
+import androidx.recyclerview.widget.DiffUtil
+import com.example.messenger.utils.TAIL_CHANGE
 
 
 class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -55,6 +55,20 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+        val set = payloads.firstOrNull() as Set<String>?
+
+        when {
+            set == null || set.isEmpty() -> return super.onBindViewHolder(holder, position, payloads)
+            set.contains(TAIL_CHANGE) -> {
+                when (holder.itemViewType) {
+                    VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).updateTail(messageSectionList[position].hasTail!!)
+                    VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).updateTail(messageSectionList[position].hasTail!!)
+                }
+            }
+        }
+    }
+
     override fun getItemCount(): Int {
         return if(::messageSectionList.isInitialized) messageSectionList.size else 0
     }
@@ -65,8 +79,18 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun updateMessageList(messageSectionList:List<MessageSection>){
+        if (itemCount == 0) {
+            this.messageSectionList = messageSectionList
+            notifyDataSetChanged()
+        } else {
+            updateMessageSectionListData(messageSectionList)
+        }
+    }
+
+    private fun updateMessageSectionListData(messageSectionList: List<MessageSection>){
+        val diffResult = DiffUtil.calculateDiff(ConversionListDiff(this.messageSectionList, messageSectionList))
         this.messageSectionList = messageSectionList
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class SectionBreakViewHolder(private val binding: ItemSectionBreakBinding):RecyclerView.ViewHolder(binding.root){
@@ -85,6 +109,10 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             viewModel.bind(messageSection.message!!, messageSection.hasTail!!)
             binding.viewModel = viewModel
         }
+
+        fun updateTail(hashTail: Boolean){
+            viewModel.updateHasTail(hashTail)
+        }
     }
 
     inner class ReceivedMessageHolder(private val binding: ItemReceivedMessageBinding):RecyclerView.ViewHolder(binding.root){
@@ -94,7 +122,32 @@ class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             viewModel.bind(messageSection.message!!, messageSection.hasTail!!)
             binding.viewModel = viewModel
         }
+
+        fun updateTail(hashTail: Boolean){
+            viewModel.updateHasTail(hashTail)
+        }
     }
 
     class EmptyMessageHolder(private val binding: ItemSectionBreakBinding):RecyclerView.ViewHolder(binding.root)
+
+    inner class ConversionListDiff(private val oldList: List<MessageSection>, private val newList: List<MessageSection>) : DiffUtil.Callback() {
+        override fun getOldListSize() = oldList.size
+
+        override fun getNewListSize() = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+
+        override fun getChangePayload(oldPosition: Int, newPosition: Int): Any? {
+            val payloadSet = mutableSetOf<String>()
+            when { oldList[oldPosition].hasTail != newList[newPosition].hasTail -> payloadSet.add(TAIL_CHANGE) }
+
+            return payloadSet
+        }
+    }
 }
