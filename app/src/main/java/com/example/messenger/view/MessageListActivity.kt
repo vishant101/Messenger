@@ -30,9 +30,6 @@ class MessageListActivity: AppCompatActivity() {
         viewModel.errorMessage.observe(this, Observer {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
-        viewModel.toastStatus.observe(this, Observer {
-                toastStatus -> toastStatus?.let { Toast.makeText(this, EMPTY_MESSAGE_TOAST, Toast.LENGTH_SHORT).show() }
-        })
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }

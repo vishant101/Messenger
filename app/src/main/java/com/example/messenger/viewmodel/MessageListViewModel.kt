@@ -32,8 +32,6 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage:MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadMessages() }
-    var toastStatus = MutableLiveData<Boolean?>()
-
 
     private val enteredUserMessage = MutableLiveData<String>()
     private val messageList: MutableList<Message> = mutableListOf()
@@ -136,10 +134,6 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     }
 
     fun sendMessage() {
-        if (enteredUserMessage.value == null || enteredUserMessage.value == ""){
-            this.toastStatus.value = true
-            return
-        }
         val timeStamp = System.currentTimeMillis() / 1000
         val messageId = this.messageList[messageList.size-1].messageId + 1
         val message = Message( messageId, USER_ID, USER_NAME, enteredUserMessage.value!!, timeStamp)
