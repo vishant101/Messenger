@@ -13,18 +13,33 @@
         android:layout_height="wrap_content"
         android:padding="5dp">
 
-
-        <TextView
-            android:id="@+id/section_day"
-            android:hint="@string/placeholder_date"
-            app:mutableText="@{viewModel.getDate()}"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" >
+
+            <TextView
+                android:id="@+id/section_day"
+                android:hint="@string/placeholder_day"
+                app:mutableText="@{viewModel.getDay()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/section_time"
+                android:hint="@string/placeholder_time"
+                app:mutableText="@{viewModel.getTime()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

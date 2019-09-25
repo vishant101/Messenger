@@ -9,4 +9,6 @@
     <string name="placeholder_message">hi man, how are you?</string>
     <string name="placeholder_sent_message">hello, hello!</string>
     <string name="placeholder_date">Monday 03:02</string>
+    <string name="placeholder_day">Friday </string>
+    <string name="placeholder_time">03:02</string>
 </resources>

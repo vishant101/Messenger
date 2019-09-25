@@ -5,16 +5,25 @@ import com.example.messenger.model.MessageSection
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class SectionBreakViewModel:BaseViewModel() {
-    private val dateString = MutableLiveData<String>()
+    private val dayString = MutableLiveData<String>()
+    private val timeString = MutableLiveData<String>()
+
 
     fun bind(messageSection: MessageSection){
         val date = Date(messageSection.epochTime*1000)
-        val dateFormat = SimpleDateFormat("E HH:mm")
-        dateString.value = dateFormat.format(date) // date.toString()
+        val dayFormat = SimpleDateFormat("EEEE ")
+        val timeFormat = SimpleDateFormat("HH:mm")
+        dayString.value = dayFormat.format(date)
+        timeString.value = timeFormat.format(date)
     }
 
-    fun getDate(): MutableLiveData<String> {
-        return dateString
+    fun getDay(): MutableLiveData<String> {
+        return dayString
+    }
+
+    fun getTime(): MutableLiveData<String> {
+        return timeString
     }
 }
