@@ -24,7 +24,9 @@ class MessageListActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_message_list)
-        binding.messageList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        var mLayoutManger = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        mLayoutManger.stackFromEnd = true
+        binding.messageList.layoutManager = mLayoutManger
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(MessageListViewModel::class.java)
         viewModel.errorMessage.observe(this, Observer {

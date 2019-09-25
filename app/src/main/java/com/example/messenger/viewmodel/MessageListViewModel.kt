@@ -28,14 +28,15 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
     @Inject
     lateinit var messageApi: MessageApi
     val messageListAdapter: MessageListAdapter = MessageListAdapter()
+    private var elementSize = 0
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage:MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadMessages() }
+    val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> messageListAdapter.scrollTo.set(elementSize-1) }
 
     private val enteredUserMessage = MutableLiveData<String>()
     private val messageList: MutableList<Message> = mutableListOf()
-
 
     private lateinit var subscription: Disposable
 
@@ -115,7 +116,8 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
             messageSectionList.add(MessageSection(viewType, message, hasTale, epochTime))
         }
 
-        return messageSectionList
+        elementSize = messageSectionList.size
+        return messageSectionList.asReversed()
     }
 
     private fun getViewType(message: Message): Int{

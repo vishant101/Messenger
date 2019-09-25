@@ -22,7 +22,7 @@ import com.example.messenger.utils.TAIL_CHANGE
 
 class MessageListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var messageSectionList: List<MessageSection>
-    var scrollTo = ObservableInt()
+     var scrollTo = ObservableInt()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
