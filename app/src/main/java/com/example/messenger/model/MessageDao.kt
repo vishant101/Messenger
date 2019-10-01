@@ -12,4 +12,7 @@ interface MessageDao {
 
     @Insert
     fun insertAll(vararg messages: Message)
+
+    @Insert
+    fun insert(message: Message)
 }

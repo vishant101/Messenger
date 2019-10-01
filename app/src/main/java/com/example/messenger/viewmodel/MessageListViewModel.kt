@@ -21,6 +21,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import android.os.AsyncTask
+
 
 
 
@@ -144,6 +146,7 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
         // Ideally we want to send a message to a service and snyc our messageList
         // For now we will just update our local messages
         this.messageList.add(message)
+        InsertMessageAsyncTask(messageDao, message).execute()
         val messageSectionList: MutableList<MessageSection>  = createMessageSectionList()
         messageListAdapter.updateMessageList(messageSectionList)
         messageListAdapter.scrollTo.set(messageSectionList.size-1)
@@ -155,5 +158,16 @@ class MessageListViewModel(private val messageDao: MessageDao):BaseViewModel(){
 
     fun onEditTextChange(s: CharSequence) {
         enteredUserMessage.value = s.toString()
+    }
+
+    class InsertMessageAsyncTask(
+        private val messageDao: MessageDao,
+        private val message: Message
+    ) : AsyncTask<Void, Void, Int>() {
+
+        override fun doInBackground(vararg params: Void): Int? {
+            messageDao.insert(message)
+            return 0
+        }
     }
 }
