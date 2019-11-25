@@ -1,5 +1,5 @@
 # Messenger 
-A Rx Kotlin sample messenger app for Android. THe app is built with mvvm architecture and android databindings. It also features dependancy injection via dagger and networking with retrofit
+A Rx Kotlin sample messenger app for Android. The app is built with mvvm architecture and android databindings. It also features dependancy injection via dagger and networking with retrofit
 
 ## Getting Started
 1. Download and install android studio
